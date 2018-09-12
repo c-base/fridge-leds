@@ -1,22 +1,50 @@
 #include <Adafruit_NeoPixel.h>
 
-#define PIN 1
+#define PIN1 D3
+#define PIN2 D2
+#define PIN3 D1
 
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(99, PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel _strip1 = Adafruit_NeoPixel(99,   PIN1, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel _strip2 = Adafruit_NeoPixel(100, PIN2, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel _strip3 = Adafruit_NeoPixel(99,   PIN3, NEO_GRB + NEO_KHZ800);
 
 void setup() { 
-  strip.begin();
-  strip.show(); // Initialize all pixels to 'off'
+  _strip1.begin();
+  _strip2.begin();
+  _strip3.begin();
+  
+  _strip1.show();
+  _strip2.show();
+  _strip3.show();
 }
 
 void loop() {
-  colorWipe(strip.Color(255, 0, 0), 50); // Red
-  colorWipe(strip.Color(0, 255, 0), 50); // Green
-  colorWipe(strip.Color(0, 0, 255), 50); // Blue
+  // Strip 1
+  colorWipe(_strip1.Color(255, 0, 0), 50);
+  colorWipe(_strip1.Color(0, 255, 0), 50);
+  colorWipe(_strip1.Color(0, 0, 255), 50);
 
-  theaterChase(strip.Color(127, 127, 127), 50); // White
-  theaterChase(strip.Color(127, 0, 0), 50); // Red
-  theaterChase(strip.Color(0, 0, 127), 50); // Blue
+  theaterChase(_strip1.Color(127, 127, 127), 50);
+  theaterChase(_strip1.Color(127, 0, 0), 50);
+  theaterChase(_strip1.Color(0, 0, 127), 50);
+
+  // Strip 2
+  colorWipe(_strip2.Color(255, 0, 0), 50);
+  colorWipe(_strip2.Color(0, 255, 0), 50);
+  colorWipe(_strip2.Color(0, 0, 255), 50);
+
+  theaterChase(_strip2.Color(127, 127, 127), 50);
+  theaterChase(_strip2.Color(127, 0, 0), 50);
+  theaterChase(_strip2.Color(0, 0, 127), 50);
+  
+  // Strip 3
+  colorWipe(_strip3.Color(255, 0, 0), 50);
+  colorWipe(_strip3.Color(0, 255, 0), 50);
+  colorWipe(_strip3.Color(0, 0, 255), 50);
+
+  theaterChase(_strip3.Color(127, 127, 127), 50);
+  theaterChase(_strip3.Color(127, 0, 0), 50);
+  theaterChase(_strip3.Color(0, 0, 127), 50);
 
   rainbow(20);
   rainbowCycle(20);
@@ -24,31 +52,46 @@ void loop() {
 }
 
 void colorWipe(uint32_t c, uint8_t wait) {
-  for(uint16_t i=0; i<strip.numPixels(); i++) {
-    strip.setPixelColor(i, c);
-    strip.show();
+  for(uint16_t i=0; i < _strip2.numPixels(); i++) {    
+    _strip1.setPixelColor(i, c);
+    _strip1.show();
+
+    _strip2.setPixelColor(i, c);
+    _strip2.show();
+
+    _strip3.setPixelColor(i, c);
+    _strip3.show();
+
     delay(wait);
   }
 }
 
 void rainbow(uint8_t wait) {  
   for(uint16_t j=0;  j <256; j++) {
-    for(uint16_t i = 0; i < strip.numPixels(); i++)
-      strip.setPixelColor(i, Wheel((i + j) & 255));
+    for(uint16_t i = 0; i < _strip2.numPixels(); i++) {
+      _strip1.setPixelColor(i, Wheel1((i + j) & 255));
+      _strip2.setPixelColor(i, Wheel2((i + j) & 255));
+      _strip3.setPixelColor(i, Wheel3((i + j) & 255));
+    }
     
-    strip.show();
+    _strip1.show();
+    _strip2.show();
+    _strip3.show();
     delay(wait);
   }
 }
 
-void rainbowCycle(uint8_t wait) {
-  uint16_t i, j;
-
+void rainbowCycle(uint8_t wait) {  
   for(uint16_t j = 0; j < 256 * 5; j++) {
-    for(uint16_t i = 0; i < strip.numPixels(); i++)
-      strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
+    for(uint16_t i = 0; i < _strip2.numPixels(); i++) {
+      _strip1.setPixelColor(i, Wheel1(((i * 256 / _strip1.numPixels()) + j) & 255));
+      _strip2.setPixelColor(i, Wheel2(((i * 256 / _strip1.numPixels()) + j) & 255));
+      _strip3.setPixelColor(i, Wheel3(((i * 256 / _strip1.numPixels()) + j) & 255));
+    }
     
-    strip.show();
+    _strip1.show();
+    _strip2.show();
+    _strip3.show();
     delay(wait);
   }
 }
@@ -56,14 +99,22 @@ void rainbowCycle(uint8_t wait) {
 void theaterChase(uint32_t c, uint8_t wait) {
   for (int j = 0; j < 10; j++) {
     for (int q = 0; q < 3; q++) {
-      for (uint16_t i = 0; i < strip.numPixels(); i = i + 3)
-        strip.setPixelColor(i+q, c);
+      for (uint16_t i = 0; i < _strip2.numPixels(); i = i + 3) {
+        _strip1.setPixelColor(i + q, c);
+        _strip2.setPixelColor(i + q, c);
+        _strip3.setPixelColor(i + q, c);
+      }
       
-      strip.show();
+      _strip1.show();
+      _strip2.show();
+      _strip3.show();
       delay(wait);
 
-      for (uint16_t i = 0; i < strip.numPixels(); i = i + 3)
-        strip.setPixelColor(i + q, 0);      
+      for (uint16_t i = 0; i < _strip2.numPixels(); i = i + 3) {
+        _strip1.setPixelColor(i + q, 0);
+        _strip2.setPixelColor(i + q, 0);
+        _strip3.setPixelColor(i + q, 0);
+      }
     }
   }
 }
@@ -71,29 +122,68 @@ void theaterChase(uint32_t c, uint8_t wait) {
 void theaterChaseRainbow(uint8_t wait) {
   for (int j = 0; j < 256; j++) {
     for (int q = 0; q < 3; q++) {
-      for (uint16_t i = 0; i < strip.numPixels(); i = i + 3)
-        strip.setPixelColor(i + q, Wheel( (i + j) % 255));
+      for (uint16_t i = 0; i < _strip2.numPixels(); i = i + 3) {
+        _strip1.setPixelColor(i + q, Wheel1( (i + j) % 255));
+        _strip2.setPixelColor(i + q, Wheel2( (i + j) % 255));
+        _strip3.setPixelColor(i + q, Wheel3( (i + j) % 255));
+      }
       
-      strip.show();
+      _strip1.show();
+      _strip2.show();
+      _strip3.show();
       delay(wait);
 
-      for (uint16_t i = 0; i < strip.numPixels(); i = i + 3)
-        strip.setPixelColor(i + q, 0);
+      for (uint16_t i = 0; i < _strip2.numPixels(); i = i + 3) {
+        _strip1.setPixelColor(i + q, 0);
+        _strip2.setPixelColor(i + q, 0);
+        _strip3.setPixelColor(i + q, 0);
+      }
     }
   }
 }
 
-uint32_t Wheel(byte WheelPos) {
-  WheelPos = 255 - WheelPos;
+uint32_t Wheel1(byte wheelPos) {
+  wheelPos = 255 - wheelPos;
   
-  if(WheelPos < 85)
-    return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
+  if(wheelPos < 85)
+    return _strip1.Color(255 - wheelPos * 3, 0, wheelPos * 3);
   
-  if(WheelPos < 170) {
-    WheelPos -= 85;
-    return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
+  if(wheelPos < 170) {
+    wheelPos -= 85;
+    return _strip1.Color(0, wheelPos * 3, 255 - wheelPos * 3);
   }
   
-  WheelPos -= 170;
-  return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
+  wheelPos -= 170;
+  return _strip1.Color(wheelPos * 3, 255 - wheelPos * 3, 0);
 }
+
+uint32_t Wheel2(byte wheelPos) {
+  wheelPos = 255 - wheelPos;
+  
+  if(wheelPos < 85)
+    return _strip2.Color(255 - wheelPos * 3, 0, wheelPos * 3);
+  
+  if(wheelPos < 170) {
+    wheelPos -= 85;
+    return _strip2.Color(0, wheelPos * 3, 255 - wheelPos * 3);
+  }
+  
+  wheelPos -= 170;
+  return _strip2.Color(wheelPos * 3, 255 - wheelPos * 3, 0);
+}
+
+uint32_t Wheel3(byte wheelPos) {
+  wheelPos = 255 - wheelPos;
+  
+  if(wheelPos < 85)
+    return _strip3.Color(255 - wheelPos * 3, 0, wheelPos * 3);
+  
+  if(wheelPos < 170) {
+    wheelPos -= 85;
+    return _strip3.Color(0, wheelPos * 3, 255 - wheelPos * 3);
+  }
+  
+  wheelPos -= 170;
+  return _strip3.Color(wheelPos * 3, 255 - wheelPos * 3, 0);
+}
+
