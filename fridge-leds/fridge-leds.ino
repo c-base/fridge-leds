@@ -19,6 +19,11 @@ void setup() {
 }
 
 void loop() {
+  // brightness
+  _strip1.setBrightness(13);
+  _strip2.setBrightness(13);
+   _strip3.setBrightness(13);
+
   // Strip 1
   colorWipe(_strip1.Color(255, 0, 0), 50);
   colorWipe(_strip1.Color(0, 255, 0), 50);
@@ -32,7 +37,7 @@ void loop() {
   colorWipe(_strip2.Color(255, 0, 0), 50);
   colorWipe(_strip2.Color(0, 255, 0), 50);
   colorWipe(_strip2.Color(0, 0, 255), 50);
-
+  
   theaterChase(_strip2.Color(127, 127, 127), 50);
   theaterChase(_strip2.Color(127, 0, 0), 50);
   theaterChase(_strip2.Color(0, 0, 127), 50);
